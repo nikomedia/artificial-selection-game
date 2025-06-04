@@ -45,10 +45,7 @@ const TRAITS = [
 ];
 
 const rollDie = () => Math.ceil(Math.random() * 6);
-
-const generateDogs = (num, inheritedTraits) => {
-  return Array.from({ length: num }).map(() => ({ traits: { ...inheritedTraits } }));
-};
+const generateDogs = (num, inheritedTraits) => Array.from({ length: num }).map(() => ({ traits: { ...inheritedTraits } }));
 
 const ArtificialSelectionGame = () => {
   const [goal, setGoal] = useState("");
@@ -159,6 +156,11 @@ const ArtificialSelectionGame = () => {
     return Math.min(100, Math.round((goalScore / goalTotal) * 100));
   };
 
+  const getGoalImage = () => {
+    const goalKey = goal.toLowerCase().split(" ")[0];
+    return `/images/${goalKey}.jpg`;
+  };
+
   const data = {
     labels: history.map((_, i) => `Gen ${i + 1}`),
     datasets: TRAITS.filter((t) => history.some((h) => h[t.name] !== undefined)).map((trait, i) => ({
@@ -214,7 +216,13 @@ const ArtificialSelectionGame = () => {
         </div>
       </div>
 
-      {goalAchieved && <div className="success-message">🎉 You have successfully bred a perfect {goal}!</div>}
+      {goalAchieved && (
+        <div className="success-message">
+          <h3>🎉 You have successfully bred a perfect {goal}!</h3>
+          <img src={getGoalImage()} alt={goal} style={{ maxWidth: "300px", marginTop: "10px", borderRadius: "12px" }} />
+        </div>
+      )}
+
       {gameOver && <div className="game-over">💸 Game Over: You ran out of budget before breeding a perfect dog.</div>}
       {showRestart && <button onClick={restartGame}>Restart Game</button>}
 
